@@ -1,6 +1,6 @@
 package br.com.alura.adopet.api.validacoes;
 
-import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
+import br.com.alura.adopet.api.dto.adocao.SolicitacaoAdocaoDto;
 import br.com.alura.adopet.api.exception.ValidacaoException;
 import br.com.alura.adopet.api.model.Pet;
 import br.com.alura.adopet.api.repository.PetRepository;
@@ -16,9 +16,7 @@ public class ValidacaoPetDisponivel implements ValidacaoSolicitacaoAdocao {
     public void validar(SolicitacaoAdocaoDto dto) {
         Pet pet = petRepository.getReferenceById(dto.idPet());
 
-        if (pet.getAdotado()) {
-            throw new ValidacaoException("Pet já foi adotado!");
-        }
+        if (pet.getAdotado()) throw new ValidacaoException("Pet já foi adotado!");
     }
 
 }
