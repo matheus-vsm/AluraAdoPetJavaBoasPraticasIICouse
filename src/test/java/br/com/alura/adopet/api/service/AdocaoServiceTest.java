@@ -12,10 +12,7 @@ import br.com.alura.adopet.api.validacoes.ValidacaoSolicitacaoAdocao;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -44,12 +41,15 @@ class AdocaoServiceTest {
     private List<ValidacaoSolicitacaoAdocao> validacoes;
 
     @Mock
+    private ValidacaoSolicitacaoAdocao validador1;
+
+    @Mock
+    private ValidacaoSolicitacaoAdocao validador2;
+
     private Pet pet;
 
-    @Mock
     private Tutor tutor;
 
-    @Mock
     private Abrigo abrigo;
 
     private SolicitacaoAdocaoDto dto;
@@ -59,13 +59,13 @@ class AdocaoServiceTest {
 
     @Test
     void deveriaSalvarAdocaoAoSolicitar() {
-        // Arrange
-        this.dto = new SolicitacaoAdocaoDto(10l, 20l, "Quero adotar porque amo animais");
+        //ARRANGE
+        this.dto = new SolicitacaoAdocaoDto(10l, 20l, "motivo qualquer");
         given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
         given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
         given(pet.getAbrigo()).willReturn(abrigo);
 
-        // Act
+        //ACT
         service.solicitar(dto);
 
         // Assert
@@ -74,6 +74,24 @@ class AdocaoServiceTest {
         Assertions.assertEquals(pet, adocaoSalva.getPet());
         Assertions.assertEquals(tutor, adocaoSalva.getTutor());
         Assertions.assertEquals(dto.motivo(), adocaoSalva.getMotivo());
+    }
+
+    @Test
+    void deveriaChamarValidadoresDeAdocaoAoSolicitra() {
+        //ARRANGE
+        this.dto = new SolicitacaoAdocaoDto(10l, 20l, "motivo qualquer");
+        given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
+        given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
+        given(pet.getAbrigo()).willReturn(abrigo);
+        validacoes.add(validador1);
+        validacoes.add(validador2);
+
+        //ACT
+        service.solicitar(dto);
+
+        //ASSERT
+        BDDMockito.then(validador1).should().validar(dto);
+        BDDMockito.then(validador2).should().validar(dto);
     }
 
 }
