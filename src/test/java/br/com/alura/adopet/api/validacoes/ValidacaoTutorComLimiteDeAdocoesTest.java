@@ -15,10 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class ValidacaoPetComAdocaoEmAndamentoTest {
-
+class ValidacaoTutorComLimiteDeAdocoesTest {
     @InjectMocks
-    private ValidacaoPetComAdocaoEmAndamento validador;
+    private ValidacaoTutorComLimiteDeAdocoes validador;
 
     @Mock
     private AdocaoRepository adocaoRepository;
@@ -26,28 +25,23 @@ class ValidacaoPetComAdocaoEmAndamentoTest {
     @Mock
     private SolicitacaoAdocaoDto dto;
 
+
     @Test
-    void naoDeveriaPermitirSolicitacaoDeAdocaoDePetComPedidoEmAndamento() {
+    void naoDeveriaPermitirSolicitacaoDeAdocaoTutorAtingiuLimiteDe5Adocoes() {
         //Arrange
-        given(adocaoRepository.existsByPetIdAndStatus(
-                dto.idPet(),
-                StatusAdocao.AGUARDANDO_AVALIACAO)
-        ).willReturn(true);
+        given(adocaoRepository.countByTutorIdAndStatus(dto.idTutor(),StatusAdocao.APROVADO)).willReturn(5);
 
         //Act + Assert
-        assertThrows(ValidacaoException.class, () -> validador.validar(dto));
+        assertThrows(ValidacaoException.class,() ->validador.validar(dto));
     }
 
     @Test
-    void deveriaPermitirSolicitacaoDeAdocaoDePetComPedidoInexistente() {
+    void deveriaPermitirSolicitacaoDeAdocaoTutorNaoAtingiuLimiteDe5Adocoes() {
         //Arrange
-        given(adocaoRepository.existsByPetIdAndStatus(
-                dto.idPet(),
-                StatusAdocao.AGUARDANDO_AVALIACAO
-        )).willReturn(false);
+        given(adocaoRepository.countByTutorIdAndStatus(dto.idTutor(),StatusAdocao.APROVADO)).willReturn(4);
 
         //Act + Assert
-        assertDoesNotThrow(()->validador.validar(dto));
+        assertDoesNotThrow(() -> validador.validar(dto));
     }
 
 }
