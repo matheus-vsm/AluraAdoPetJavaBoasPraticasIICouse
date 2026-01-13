@@ -47,7 +47,7 @@ class ValidacaoPetComAdocaoEmAndamentoTest {
         )).willReturn(false);
 
         //Act + Assert
-        assertDoesNotThrow(()->validador.validar(dto));
+        assertDoesNotThrow(() -> validador.validar(dto));
     }
 
 }

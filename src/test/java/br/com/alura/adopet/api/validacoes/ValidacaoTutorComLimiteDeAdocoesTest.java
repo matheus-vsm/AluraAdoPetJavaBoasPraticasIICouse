@@ -29,16 +29,16 @@ class ValidacaoTutorComLimiteDeAdocoesTest {
     @Test
     void naoDeveriaPermitirSolicitacaoDeAdocaoTutorAtingiuLimiteDe5Adocoes() {
         //Arrange
-        given(adocaoRepository.countByTutorIdAndStatus(dto.idTutor(),StatusAdocao.APROVADO)).willReturn(5);
+        given(adocaoRepository.countByTutorIdAndStatus(dto.idTutor(), StatusAdocao.APROVADO)).willReturn(5);
 
         //Act + Assert
-        assertThrows(ValidacaoException.class,() ->validador.validar(dto));
+        assertThrows(ValidacaoException.class, () -> validador.validar(dto));
     }
 
     @Test
     void deveriaPermitirSolicitacaoDeAdocaoTutorNaoAtingiuLimiteDe5Adocoes() {
         //Arrange
-        given(adocaoRepository.countByTutorIdAndStatus(dto.idTutor(),StatusAdocao.APROVADO)).willReturn(4);
+        given(adocaoRepository.countByTutorIdAndStatus(dto.idTutor(), StatusAdocao.APROVADO)).willReturn(4);
 
         //Act + Assert
         assertDoesNotThrow(() -> validador.validar(dto));

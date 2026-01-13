@@ -42,12 +42,12 @@ class AdocaoControllerTest {
     void deveriaDevolverCodigo200ParaSolicitacaoDeAdocaoSemErros() throws Exception {
         //ARRANGE
         String json = """
-            {
-                "idPet": 1,
-                "idTutor": 1,
-                "motivo": "Motivo qualquer"
-            }
-            """;
+                {
+                    "idPet": 1,
+                    "idTutor": 1,
+                    "motivo": "Motivo qualquer"
+                }
+                """;
 
         //ACT
         var response = mvc.perform(
